@@ -1,10 +1,10 @@
 # Live Sports Tracker · Sideline
 
-**[Open the interactive website](https://sideline-yis4u-live-sports.zhenyea08.chatgpt.site)**
+**[Open Live Sports Tracker on GitHub Pages](https://yis4u.github.io/live-sports-tracker/)**
 
 The website opens the dashboard directly. The GitHub repository contains the source code and this setup guide.
 
-The hosted version currently uses clearly labeled sample scores and device-local favorites. Real scores need the server-side API-Sports key. PostgreSQL profile syncing is available in the Node.js app below and is not configured on the hosted Worker.
+The GitHub Pages website uses clearly labeled sample scores and device-local favorites. Real scores and PostgreSQL profile syncing require a backend; those are available in the Node.js app below. GitHub Pages serves static websites and does not run server API routes or store API secrets.
 
 A multi-sport match center built with Next.js, TypeScript, React, and PostgreSQL. Follow football, basketball, and baseball fixtures, browse standings and player leaders, and save teams to your profile.
 
@@ -24,9 +24,23 @@ Match dates are selected in UTC; match times are displayed in the browser's loca
 
 ## Run the demo
 
-### Hosted website build
+### GitHub Pages website
 
-The public website reuses the same React dashboard through a self-contained Sites Worker. Its build includes the frontend and server-side sports adapter; it does not require a Next.js server.
+The repository's existing GitHub Pages publishing source is `main` at the repository root. The generated `index.html`, `assets/`, `icon.svg`, and `.nojekyll` files render the interactive dashboard there. The website makes no requests to a separate hosting service.
+
+```sh
+npm ci
+npm run prepare:pages
+npm run preview:pages
+```
+
+The preview opens at <http://localhost:8788/live-sports-tracker/>. After changing the dashboard, run `npm run prepare:pages` and commit the generated files with the source changes. CI checks that the published files match their source. GitHub Pages publishes each push to `main` automatically.
+
+The static website supports sport/date/status/search filters, standings, player views, match details, device-local favorites, and in-app updates. It has no server keys or PostgreSQL connection. Use the Node.js deployment below to enable authenticated profiles and live provider data.
+
+### Optional Worker build
+
+An optional Worker build also reuses the React dashboard. Its build includes the frontend and server-side sports adapter; it does not require a Next.js server. The primary public website is hosted on GitHub Pages as described above.
 
 ```sh
 npm ci

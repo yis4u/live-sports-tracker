@@ -104,8 +104,12 @@ function readKnownTeams(): Record<string, Team> {
     }),
   ) as Record<string, Team>;
 }
-async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(path, {
+async function requestApi<T>(
+  fetcher: typeof fetch,
+  path: string,
+  init?: RequestInit,
+): Promise<T> {
+  const res = await fetcher(path, {
     ...init,
     headers: { "Content-Type": "application/json", ...init?.headers },
   });
@@ -204,7 +208,15 @@ function Modal({
   );
 }
 
-export default function Dashboard() {
+export default function Dashboard({
+  fetcher = fetch,
+  homeHref = "/",
+}: { fetcher?: typeof fetch; homeHref?: string } = {}) {
+  const api = useCallback(
+    <T,>(path: string, init?: RequestInit) =>
+      requestApi<T>(fetcher, path, init),
+    [fetcher],
+  );
   const [sport, setSport] = useState<Sport>("football");
   const [date, setDate] = useState("");
   const [view, setView] = useState<View>("matches");
@@ -267,7 +279,7 @@ export default function Dashboard() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [api]);
 
   useEffect(() => {
     if (!mobileMenu) return;
@@ -367,7 +379,7 @@ export default function Dashboard() {
         }
       }
     },
-    [sport, date],
+    [sport, date, api],
   );
 
   useEffect(() => {
@@ -642,7 +654,7 @@ export default function Dashboard() {
         aria-modal={mobileMenu ? true : undefined}
         aria-label="Site navigation"
       >
-        <a className="brand" href="/" aria-label="Sideline home">
+        <a className="brand" href={homeHref} aria-label="Sideline home">
           <span className="brand-mark">
             <Zap size={25} fill="currentColor" />
           </span>

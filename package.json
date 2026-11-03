@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build --webpack",
+    "build:pages": "node scripts/build-pages.mjs",
+    "prepare:pages": "npm run build:pages && node scripts/stage-pages.mjs",
+    "preview:pages": "node scripts/preview-pages.mjs",
     "build:site": "node scripts/build-site.mjs",
     "validate:site": "node scripts/validate-site.mjs",
     "preview:site": "node scripts/preview-site.mjs",
@@ -13,6 +16,7 @@
     "test": "tsx --test tests/*.test.ts",
     "test:db": "tsx tests/db.integration.ts",
     "test:e2e": "playwright test",
+    "test:pages": "playwright test --config playwright.pages.config.ts",
     "db:migrate": "tsx scripts/migrate.ts"
   },
   "dependencies": {

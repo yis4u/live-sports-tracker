@@ -43,7 +43,11 @@ jobs:
       - run: npm test
       - run: npm run test:db
       - run: npm run build
+      - run: npm run prepare:pages
+      - name: Verify published GitHub Pages files match the source
+        run: git diff --exit-code -- index.html assets/app.js assets/app.css icon.svg .nojekyll
       - run: npm run build:site
       - run: npm run validate:site
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - run: npm run test:pages
