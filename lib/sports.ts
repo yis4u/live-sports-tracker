@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { demoDashboard } from "./demo";
 import type {
   DashboardData,
@@ -539,7 +538,8 @@ export async function getDashboardData(
   if (typeof window !== "undefined")
     throw new Error("Sports provider credentials are server-only.");
   validateDashboardQuery(sport, date);
-  const env = dependencies.env ?? process.env;
+  const env =
+    dependencies.env ?? (typeof process === "undefined" ? {} : process.env);
   const now = dependencies.now ?? (() => new Date());
   if (!env.API_SPORTS_KEY?.trim()) return demoDashboard(sport, date, now());
   const provider = config(sport, env);
@@ -548,7 +548,16 @@ export async function getDashboardData(
     date,
     provider.league,
     provider.season,
-    createHash("sha256").update(provider.key).digest("hex"),
+    Array.from(
+      new Uint8Array(
+        await crypto.subtle.digest(
+          "SHA-256",
+          new TextEncoder().encode(provider.key),
+        ),
+      ),
+    )
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join(""),
   ].join(":");
   const cached = cache.get(cacheKey);
   if (cached && cached.expiresAt > now().valueOf()) return cached.data;

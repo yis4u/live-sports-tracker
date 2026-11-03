@@ -1,5 +1,11 @@
 # Live Sports Tracker · Sideline
 
+**[Open the interactive website](https://sideline-yis4u-live-sports.zhenyea08.chatgpt.site)**
+
+The website opens the dashboard directly. The GitHub repository contains the source code and this setup guide.
+
+The hosted version currently uses clearly labeled sample scores and device-local favorites. Real scores need the server-side API-Sports key. PostgreSQL profile syncing is available in the Node.js app below and is not configured on the hosted Worker.
+
 A multi-sport match center built with Next.js, TypeScript, React, and PostgreSQL. Follow football, basketball, and baseball fixtures, browse standings and player leaders, and save teams to your profile.
 
 This repository is Project 1 of five separate projects. Development of Movie Night Matcher, AI Travel Planner, Campus Study Spot Finder, and Habit Tracker That Grows a Garden belongs in separate conversations and repositories. See [project conversation prompts](docs/project-conversations.md) for the handoff to each new chat.
@@ -17,6 +23,21 @@ This repository is Project 1 of five separate projects. Development of Movie Nig
 Match dates are selected in UTC; match times are displayed in the browser's local timezone. The dashboard refreshes every 60 seconds. Provider responses are cached for 60 seconds per sport/date/configuration to reduce API usage.
 
 ## Run the demo
+
+### Hosted website build
+
+The public website reuses the same React dashboard through a self-contained Sites Worker. Its build includes the frontend and server-side sports adapter; it does not require a Next.js server.
+
+```sh
+npm ci
+npm run build:site
+npm run validate:site
+npm run preview:site
+```
+
+The local hosted preview opens at <http://localhost:8787>. It supports browsing all three sports and saving favorites on the current device. Account syncing needs the PostgreSQL-backed Node.js deployment described below. API-Sports secrets belong in the hosting platform's runtime secret settings.
+
+### Next.js development
 
 Use Node.js 22 or newer and npm.
 
